@@ -1,0 +1,41 @@
+[
+  {
+    "id": 0,
+    "date": "Jan 1",
+    "name": "Intelligence",
+    "entities": ["Entry 1", "Entry 2", "Entry 3"],
+    "description": "Test description"
+  },
+
+  {
+    "id": 1,
+    "date": "Jan 10",
+    "name": "Test",
+    "entities": ["Entry 1", "Entry 2"],
+    "description": "One and one"
+  },
+
+  {
+    "id": 2,
+    "date": "Feb 1",
+    "name": "Companies",
+    "entities": ["Entry 1", "Entry 2", "Entry 3", "Entry 4", "Entry 5"],
+    "description": ""
+  },
+
+  {
+    "id": 3,
+    "date": "Mar 1",
+    "name": "Custom",
+    "entities": [],
+    "description": ""
+  },
+
+  {
+    "id": 4,
+    "date": "Dec 1",
+    "name": "Delhi",
+    "entities": ["Entry 1"],
+    "description": "Hello there!"
+  }
+]

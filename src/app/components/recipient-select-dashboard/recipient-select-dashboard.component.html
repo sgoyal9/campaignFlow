@@ -1,0 +1,39 @@
+<div
+  fxFlexFill
+  fxLayout="column"
+  fxLayoutGap="16px"
+  fxLayoutAlign="center start"
+>
+  <header fxFlex="noshrink" class="max-width" fxLayout="row" fxLayoutGap="12px">
+    <header-prefix>
+      <button mat-icon-button (click)="returnToCampaignDashboard()">
+        <mat-icon>arrow_back</mat-icon>
+      </button></header-prefix
+    >
+
+    <header-title fxLayout="column" fxFlex="grow">
+      <span class="title">{{ "select recipients" | uppercase }}</span>
+
+      <span class="secondary-color"
+        >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua</span
+      >
+    </header-title>
+
+    <header-suffix fxFlexAlign="end end">
+      <button mat-icon-button (click)="campaignService.exitMailCampaign()">
+        <mat-icon class="secondary-color">close</mat-icon>
+      </button></header-suffix
+    >
+  </header>
+
+  <div
+    fxLayout="column"
+    fxFlex="grow"
+    fxLayoutAlign="start center"
+    fxFlexOffset="25"
+    class="max-width"
+  >
+    <span class="secondary-color">{{ "(Table here)" | uppercase }}</span>
+  </div>
+</div>

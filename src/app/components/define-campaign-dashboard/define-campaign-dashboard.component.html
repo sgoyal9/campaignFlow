@@ -1,0 +1,477 @@
+<div
+  fxFlexFill
+  fxLayout="column"
+  fxLayoutGap="16px"
+  fxLayoutAlign="center start"
+>
+  <mat-drawer-container autosize class="max-dimensions" [hasBackdrop]="false">
+    <div fxLayout="column" fxFlexFill>
+      <header
+        fxFlex="noshrink"
+        class="max-width"
+        fxLayout="row"
+        fxLayoutGap="12px"
+      >
+        <header-prefix>
+          <button mat-icon-button (click)="returnToRecipientSelect()">
+            <mat-icon>arrow_back</mat-icon>
+          </button></header-prefix
+        >
+
+        <header-title fxLayout="column" fxFlex="grow">
+          <span class="title">{{ "define campaign" | uppercase }}</span>
+
+          <span class="secondary-color"
+            >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua</span
+          >
+        </header-title>
+
+        <header-suffix fxFlexAlign="end end" fxLayout="row" fxLayoutGap="100px">
+          <button mat-flat-button class="saved-button">
+            <div fxFlex="grow" fxLayout="row">
+              <b fxLayoutAlign="start center">
+                <span>{{ "saved flows" | uppercase }}</span>
+
+                <mat-icon>expand_more</mat-icon>
+              </b>
+            </div>
+          </button>
+
+          <button mat-icon-button (click)="campaignService.exitMailCampaign()">
+            <mat-icon class="secondary-color">close</mat-icon>
+          </button>
+        </header-suffix>
+      </header>
+
+      <div
+        class="max-width"
+        fxLayout="row"
+        fxLayoutAlign="start center"
+        fxFlex="noshrink"
+        class="first-step-container"
+      >
+        <span class="secondary-color padding-small">1</span>
+        <button
+          *ngIf="!(data?.subject?.length > 0)"
+          mat-button
+          class="blue-text"
+          (click)="openCreateEmailDrawer()"
+        >
+          + Compose 1st Mail
+        </button>
+
+        <div *ngIf="data?.subject?.length > 0" fxLayoutAlign="start center">
+          <span class="blue-text">{{ data.subject }}</span>
+          <span class="secondary-color" fxFlexOffset="16px">{{
+            data.sendTime.fixedDate | date
+          }}</span>
+          <span class="secondary-color">, {{ data.sendTime.fixedTime }}</span>
+
+          <button
+            mat-button
+            class="blue-text"
+            fxFlexOffset="16px"
+            [matMenuTriggerFor]="emailTypes"
+            *ngIf="!(data.children?.length > 0)"
+            (click)="parentSubject = data.subject"
+          >
+            + Add Step
+          </button>
+          <mat-menu #emailTypes="matMenu" fxLayout="column">
+            <ng-template
+              [ngTemplateOutlet]="menuTemplate"
+              [ngTemplateOutletContext]="{ $implicit: data }"
+            >
+            </ng-template>
+          </mat-menu>
+        </div>
+      </div>
+
+      <mat-divider class="max-width"></mat-divider>
+
+      <div
+        fxLayout="column"
+        fxFlex="grow"
+        fxLayoutAlign="start start"
+        class="max-width"
+      >
+        <ng-container *ngIf="data?.children.length > 0">
+          <ng-template
+            [ngTemplateOutlet]="nodeTemplateRef"
+            [ngTemplateOutletContext]="{ node: data, index: 0 }"
+          >
+          </ng-template>
+        </ng-container>
+      </div>
+
+      <div class="footer max-width" fxLayoutAlign="end center">
+        <button
+          mat-raised-button
+          class="finish-button"
+          (click)="congratulations()"
+        >
+          <span class="button-text">{{
+            "Finish and make live" | uppercase
+          }}</span>
+        </button>
+      </div>
+    </div>
+
+    <mat-drawer
+      #createEmailDrawer
+      mode="over"
+      position="end"
+      class="drawer-container"
+    >
+      <div fxFlexFill fxLayout="column">
+        <header
+          fxFlex="noshrink"
+          class="max-width"
+          fxLayout="row"
+          fxLayoutGap="12px"
+        >
+          <header-title fxLayout="column" fxFlex="grow">
+            <span class="sub-title">{{
+              (data?.subject?.length > 0
+                ? getEmailIndex(selectedNode.level)
+                : "1st") + " mail" | uppercase
+            }}</span>
+
+            <span *ngIf="data?.subject?.length > 0"
+              >To be sent if <i>{{ parentSubject }}</i
+              ><span class="title"
+                >&nbsp;&nbsp;is {{ getTypeText(selectedNode.type) }}</span
+              ></span
+            >
+          </header-title>
+
+          <header-suffix fxFlexAlign="end end" fxLayout="row">
+            <button mat-icon-button (click)="closeCreateEmailDrawer(false)">
+              <mat-icon class="secondary-color">close</mat-icon>
+            </button>
+          </header-suffix>
+        </header>
+
+        <div class="drawer-content" fxLayout="column">
+          <form [formGroup]="createEmailForm">
+            <div
+              *ngIf="selectedNode?.type == campaignTypeEnum.DefinedDateTime"
+              fxLayout="row"
+              fxFlex="grow"
+              fxLayoutGap="20px"
+            >
+              <mat-form-field appearance="outline" class="input-container">
+                <input
+                  matInput
+                  [matDatepicker]="datepicker"
+                  formControlName="date"
+                />
+                <mat-datepicker-toggle matSuffix [for]="datepicker">
+                  <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+                </mat-datepicker-toggle>
+                <mat-datepicker #datepicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="input-container">
+                <input
+                  matInput
+                  [ngxTimepicker]="toggleTimepicker"
+                  [disableClick]="true"
+                  readonly
+                  formControlName="time"
+                />
+                <ngx-material-timepicker-toggle
+                  matSuffix
+                  [for]="toggleTimepicker"
+                >
+                </ngx-material-timepicker-toggle>
+              </mat-form-field>
+              <ngx-material-timepicker #toggleTimepicker>
+              </ngx-material-timepicker>
+            </div>
+
+            <div
+              *ngIf="selectedNode?.type != campaignTypeEnum.DefinedDateTime"
+              fxLayout="column"
+              fxLayoutGap="25px"
+            >
+              <mat-checkbox
+                *ngIf="
+                  selectedNode?.type == campaignTypeEnum.Opened ||
+                  selectedNode?.type == campaignTypeEnum.OpenedClicked
+                "
+                fxLayoutAlign="start center"
+                formControlName="sendImmediately"
+                (change)="
+                  changeSendType($event, createEmailForm.controls.sendLater)
+                "
+              >
+                Send immediately after opened</mat-checkbox
+              >
+
+              <mat-checkbox
+                fxLayoutAlign="start center"
+                formControlName="sendLater"
+                (change)="
+                  changeSendType(
+                    $event,
+                    createEmailForm.controls.sendImmediately
+                  )
+                "
+              >
+                <div
+                  fxLayout="row"
+                  fxFlex="grow"
+                  fxLayoutAlign="start center"
+                  fxLayoutGap="10px"
+                >
+                  <span>Send</span>
+
+                  <div
+                    fxLayout="row"
+                    fxLayoutAlign="space-between center"
+                    class="dropdown-container"
+                  >
+                    <mat-select
+                      fxFlex="35"
+                      formControlName="timeDelay"
+                      fxFlexOffset="16px"
+                    >
+                      <mat-option
+                        *ngFor="
+                          let val of createEmailForm.controls.timeUnit.value ==
+                          'days'
+                            ? selectDayOptions
+                            : selectHourOptions
+                        "
+                        [value]="val"
+                        >{{ val }}</mat-option
+                      >
+                    </mat-select>
+
+                    <mat-select fxFlex="60" formControlName="timeUnit">
+                      <mat-option [value]="'days'">Days</mat-option>
+                      <mat-option [value]="'hours'">Hours</mat-option>
+                    </mat-select>
+                  </div>
+
+                  <span
+                    *ngIf="createEmailForm.controls.timeUnit.value == 'hours'"
+                    >Later</span
+                  >
+
+                  <span
+                    *ngIf="createEmailForm.controls.timeUnit.value == 'days'"
+                    >later at</span
+                  >
+
+                  <mat-form-field
+                    appearance="outline"
+                    class="input-container no-padding-bottom"
+                    fxLayoutAlign="start center"
+                    *ngIf="
+                      createEmailForm.controls.timeUnit.value == 'days' &&
+                      (selectedNode?.type == campaignTypeEnum.Opened ||
+                        selectedNode?.type == campaignTypeEnum.OpenedClicked)
+                    "
+                  >
+                    <input
+                      matInput
+                      [ngxTimepicker]="toggleTimepicker"
+                      [disableClick]="true"
+                      readonly
+                      formControlName="time"
+                    />
+                    <ngx-material-timepicker-toggle
+                      matSuffix
+                      [for]="toggleTimepicker"
+                    >
+                    </ngx-material-timepicker-toggle>
+                  </mat-form-field>
+                  <ngx-material-timepicker #toggleTimepicker>
+                  </ngx-material-timepicker>
+                </div>
+              </mat-checkbox>
+            </div>
+          </form>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <form
+          [formGroup]="createEmailForm"
+          fxLayout="column"
+          fxLayoutGap="5px"
+          fxFlex="grow"
+          class="secondary-content"
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>Subject</mat-label>
+            <input matInput formControlName="subject" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Body</mat-label>
+            <input matInput formControlName="body" />
+          </mat-form-field>
+
+          <div fxLayoutAlign="end end" fxFlex="grow">
+            <button
+              mat-raised-button
+              class="save-button"
+              (click)="closeCreateEmailDrawer(true)"
+              [disabled]="
+                !(
+                  createEmailForm.controls.subject?.value?.length > 0 &&
+                  createEmailForm.controls.body?.value?.length > 0
+                )
+              "
+            >
+              <span class="button-text">{{ "Save" | uppercase }}</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </mat-drawer>
+  </mat-drawer-container>
+</div>
+
+<ng-template #nodeTemplateRef let-node="node" let-index="index">
+  <ng-container *ngIf="node != data">
+    <ng-template
+      [ngTemplateOutlet]="nodeBodyTemplateRef"
+      [ngTemplateOutletContext]="{ node: node, index: index }"
+    >
+    </ng-template>
+  </ng-container>
+
+  <div
+    *ngIf="node?.children?.length > 0"
+    id="{{ node.level }}"
+    class="max-width"
+  >
+    <div
+      *ngFor="let child of node.children; let index = index"
+      class="node child-container"
+      fxLayout="column"
+    >
+      <ng-template
+        [ngTemplateOutlet]="nodeBodyTemplateRef"
+        [ngTemplateOutletContext]="{ node: child, index: index }"
+      >
+      </ng-template>
+
+      <div *ngIf="child.children.length > 0" class="node">
+        <ng-container *ngFor="let chd of child.children; let index = index">
+          <ng-template
+            [ngTemplateOutlet]="nodeTemplateRef"
+            [ngTemplateOutletContext]="{ node: chd, index: index }"
+          >
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #nodeBodyTemplateRef let-node="node" let-index="index">
+  <div
+    fxLayout="row"
+    fxLayoutGap="8px"
+    fxLayoutAlign="start center"
+    class="node-container"
+  >
+    <span class="email-index secondary-color" fxLayoutAlign="center center">{{
+      index + 1
+    }}</span>
+    <span>{{ "If " + getTypeText(node.type) }}</span>
+
+    <ng-container *ngIf="node.subject?.length > 0">
+      <span class="secondary-color">{{ getTriggerCondition(node) }}</span>
+      <span class="blue-text">{{ node.subject }}</span>
+      <span class="secondary-color">{{ getCorrespondenceTime(node) }}</span>
+      <button
+        mat-button
+        class="blue-text"
+        [matMenuTriggerFor]="emailTypes"
+        (click)="parentSubject = node.subject"
+        *ngIf="!(node.children?.length > 0)"
+      >
+        + Next Mail
+      </button>
+    </ng-container>
+
+    <button
+      mat-button
+      class="blue-text"
+      *ngIf="!(node.subject?.length > 0)"
+      (click)="openCreateEmailDrawer(node)"
+    >
+      + Compose
+    </button>
+
+    <mat-menu #emailTypes="matMenu" fxLayout="column">
+      <ng-template
+        [ngTemplateOutlet]="menuTemplate"
+        [ngTemplateOutletContext]="{ $implicit: node }"
+      >
+      </ng-template>
+    </mat-menu>
+  </div>
+</ng-template>
+
+<ng-template #menuTemplate let-node>
+  <div class="secondary-color" fxLayout="row" fxFlex="grow">
+    <span>If&nbsp;</span>
+    <span class="truncate" fxLayoutAlign="center center"
+      ><i>{{ node.subject }}</i></span
+    >
+    <span>&nbsp;is</span>
+  </div>
+
+  <form
+    [formGroup]="furtherEmailTypesForm"
+    fxFlex="grow"
+    fxLayout="column"
+    fxLayoutGap="12px"
+    class="padding-top"
+    (click)="$event.stopPropagation()"
+  >
+    <ng-container
+      *ngFor="
+        let emailTypeControl of furtherEmailTypesForm.controls.emailTypes[
+          'controls'
+        ];
+        let index = index
+      "
+    >
+      <mat-checkbox
+        *ngIf="
+          index !=
+          furtherEmailTypesForm.controls.emailTypes['controls'].length - 1
+        "
+        [formControl]="emailTypeControl"
+        >{{ getTypeText(index) }}
+      </mat-checkbox>
+    </ng-container>
+
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="5px">
+      <mat-divider fxFlex="grow"></mat-divider>
+      <div>OR</div>
+      <mat-divider fxFlex="grow"></mat-divider>
+    </div>
+    <mat-checkbox
+      [formControl]="furtherEmailTypesForm.controls.emailTypes['controls'][4]"
+    >
+      {{ getTypeText(campaignTypeEnum.DefinedDateTime) }}
+    </mat-checkbox>
+    <mat-divider fxFlex="grow" fxFlexOffset="4px"></mat-divider>
+  </form>
+
+  <div fxFlex="grow" fxLayoutAlign="center center" class="padding-top">
+    <button mat-button class="blue-text" (click)="addEmailNode(node)">
+      Done
+    </button>
+  </div>
+</ng-template>

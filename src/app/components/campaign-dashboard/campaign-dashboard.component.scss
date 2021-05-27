@@ -1,0 +1,9 @@
+@import "../../../styles.scss";
+
+.next-button {
+  @include button(168px, 45px);
+}
+
+mat-label {
+  color: #55707e;
+}

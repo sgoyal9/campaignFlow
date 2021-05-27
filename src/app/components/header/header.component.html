@@ -1,0 +1,11 @@
+<div
+  fxLayout="row"
+  fxLayoutGap="25px"
+  class="header-body"
+  fxFlex="grow"
+  fxLayoutAlign="start center"
+>
+  <ng-content select="header-prefix" fxFlex="noshrink"></ng-content>
+  <ng-content select="header-title" fxFlex="grow"></ng-content>
+  <ng-content select="header-suffix" fxFlex="noshrink"></ng-content>
+</div>

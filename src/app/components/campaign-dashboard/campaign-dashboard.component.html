@@ -1,0 +1,67 @@
+<div
+  fxFlexFill
+  fxLayout="column"
+  fxLayoutGap="16px"
+  fxLayoutAlign="center start"
+>
+  <header fxFlex="noshrink" class="max-width" fxLayout="row" fxLayoutGap="12px">
+    <header-prefix><img src="assets/mail.png" /></header-prefix>
+
+    <header-title fxLayout="column" fxFlex="grow">
+      <div fxLayout="row" fxLayoutGap="12px">
+        <span class="title">{{ "Create Mail Campaign" | uppercase }}</span>
+        <span>9 Companies Selected</span>
+      </div>
+
+      <span class="secondary-color"
+        >Send mails to people from companies you want to reach out to. Send a
+        single mail or automate multiple mails to be sent periodically.</span
+      >
+    </header-title>
+
+    <header-suffix fxFlexAlign="end end">
+      <button mat-icon-button (click)="campaignService.exitMailCampaign()">
+        <mat-icon class="secondary-color">close</mat-icon>
+      </button></header-suffix
+    >
+  </header>
+
+  <div
+    fxLayout="column"
+    fxFlex="grow"
+    fxLayoutAlign="start center"
+    fxFlexOffset="15"
+    class="max-width"
+  >
+    <span class="sub-title">{{ "Campaign Name" | uppercase }}</span>
+
+    <span class="secondary-color" fxFlexOffset="20px"
+      >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua</span
+    >
+
+    <mat-form-field appearance="outline" fxFlexOffset="35px">
+      <mat-label>Campaign Name</mat-label>
+      <input matInput [formControl]="campaignNameForm" />
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      class="next-button"
+      fxFlexOffset="35px"
+      (click)="navigateToSelectRecipients()"
+      [disabled]="campaignNameForm.errors"
+    >
+      <div
+        fxLayout="row"
+        fxFlex="grow"
+        fxLayoutAlign="space-between center"
+        class="button-text"
+      >
+        <span>NEXT</span>
+
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,109 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/theming";
+$custom-typography: mat-typography-config(
+  $font-family: '"Source Sans Pro", sans-serif;',
+);
+@include mat-core(
+  $custom-typography
+); // Created a custom theme based on the base color #002b42, did not use because not sure if accurate
+// $mat-primary: (
+//   main: #002b42,
+//   lighter: #b3bfc6,
+//   darker: #001a2b,
+//   200: #002b42,
+//   // For slide toggle,
+//     contrast:
+//     (
+//       main: $light-primary-text,
+//       lighter: $dark-primary-text,
+//       darker: $light-primary-text
+//     )
+// );
+// $theme-primary: mat-palette($mat-primary, main, lighter, darker);
+//
+// $mat-accent: (
+//   main: #797979,
+//   lighter: #d7d7d7,
+//   darker: #5c5c5c,
+//   200: #797979,
+//   // For slide toggle,
+//     contrast:
+//     (
+//       main: $light-primary-text,
+//       lighter: $dark-primary-text,
+//       darker: $light-primary-text
+//     )
+// );
+// $theme-accent: mat-palette($mat-accent, main, lighter, darker);
+//
+// $mat-warn: (
+//   main: #ff0000,
+//   lighter: #ffb3b3,
+//   darker: #ff0000,
+//   200: #ff0000,
+//   // For slide toggle,
+//     contrast:
+//     (
+//       main: $light-primary-text,
+//       lighter: $dark-primary-text,
+//       darker: $light-primary-text
+//     )
+// );
+// $theme-warn: mat-palette($mat-warn, main, lighter, darker);
+//
+// $theme: mat-dark-theme($theme-primary, $theme-accent, $theme-warn);
+//
+// @include angular-material-theme($theme);
+
+body,
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.max-width {
+  width: 100% !important;
+}
+
+.max-height {
+  height: 100% !important;
+}
+
+.padding {
+  padding: 16px !important;
+}
+
+.primary-color {
+  color: #002b42 !important;
+}
+
+.secondary-color {
+  color: #768892 !important;
+}
+// .button {
+//   background: #002B42;
+//   border-radius: 3px;
+// }
+@mixin button($width: auto, $height: 45px) {
+  background: #002b42;
+  border-radius: 3px;
+  height: $height;
+  width: $width;
+}
+
+.button-text {
+  color: white;
+}
+
+.truncate {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+// .background-color {
+//
+// }
